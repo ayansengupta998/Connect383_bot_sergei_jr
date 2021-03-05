@@ -64,13 +64,13 @@ class MinimaxAgent:
         while(current_child != state):
             if minimax == 1:
                 #update parent with min of the values
-                if parents[current_parent][1] == 0:
+                if parents[current_parent][1] == 0 or parents[current_parent][1] == 123456789:
                     parents[current_parent] = (parents[current_parent][0], utility)
                 else:
                     parents[current_parent] = (parents[current_parent][0], min(parents[current_parent][1],utility))
             else:
                 #update parent with max of the values
-                if parents[current_parent][1] == 0:
+                if parents[current_parent][1] == 0 or parents[current_parent][1] == 123456789:
                     parents[current_parent] = (parents[current_parent][0], utility)
                 else:
                     parents[current_parent] = (parents[current_parent][0], max(parents[current_parent][1],utility))
@@ -93,8 +93,6 @@ class MinimaxAgent:
         parents[state] = ('',123456789)
         stack.append((state, 1))    
         utility = 0
-        if state.is_full():
-            return state.utility()
         while(len(stack) != 0):
             popped = stack.pop(len(stack)-1)
             # print("Popped:", popped[0], type(popped[0]))
@@ -104,7 +102,7 @@ class MinimaxAgent:
             else:
                 successors = popped[0].successors()
                 for succ in successors:
-                    # print("BIGGER TEST:", succ[1], type(succ[1]))
+                    # print("BIGGER TEST:", succ, succ[1], type(succ[1]))
                     if succ[1] not in visited:
                         stack.append((succ[1], popped[1]*-1))
                         parents[succ[1]] = (popped[0], 0)
