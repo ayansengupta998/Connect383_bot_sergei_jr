@@ -2,7 +2,7 @@ import random
 import math
 
 
-BOT_NAME = "INSERT NAME FOR YOUR BOT HERE OR IT WILL THROW AN EXCEPTION" + 19 
+BOT_NAME = "Sergei_jr" 
 
 
 class RandomAgent:
@@ -38,6 +38,7 @@ class MinimaxAgent:
     """Artificially intelligent agent that uses minimax to optimally select the best move."""
 
     def get_move(self, state):
+        print("I made it")
         """Select the best available move, based on minimax value."""
         nextp = state.next_player()
         best_util = -math.inf if nextp == 1 else math.inf
@@ -46,6 +47,7 @@ class MinimaxAgent:
 
         for move, state in state.successors():
             util = self.minimax(state)
+            print(util)
             if ((nextp == 1) and (util > best_util)) or ((nextp == -1) and (util < best_util)):
                 best_util, best_move, best_state = util, move, state
         return best_move, best_state
@@ -58,9 +60,19 @@ class MinimaxAgent:
 
         Returns: the exact minimax utility value of the state
         """
-        #
-        # Fill this in!
-        #
+        stack = [()]
+        visited = {}
+        stack.append((state,1))
+        while len(stack) == 0:
+            pop = stack.pop(len(stack)-1)
+            if pop[0].is_full:
+                return pop[0].utility
+            else:
+                visited.append(pop[0])
+                temp = pop[0].successors()
+                for i in temp:
+                    stack.append((i,-1 * pop[1])
+            
         return 42  # Change this line!
 
 
