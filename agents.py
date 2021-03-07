@@ -45,17 +45,23 @@ class MinimaxAgent:
         best_state = None
 
         for move, state in state.successors():
+            # print(state.successors(),"boiiii")
             util = self.minimax(state)
             if ((nextp == 1) and (util > best_util)) or ((nextp == -1) and (util < best_util)):
                 best_util, best_move, best_state = util, move, state
         return best_move, best_state
+    
+    #function that bubbles up the value from the terminal nodes
+    def bubble(self,state):
 
-#issue facing is that the states in the dicitonary seem to be behaving erratically. can't seem to find the key stored even though it is in the dict
-#mismatch of object types
-# The utility function should ideally be returning a non zero value
+        return 0
+
 
     def minimax(self, state):
-        print("in here")
+        stack = []
+        visited = {}
+       
+
         
         return state.utility()
 
