@@ -52,18 +52,28 @@ class MinimaxAgent:
         return best_move, best_state
     
     #function that bubbles up the value from the terminal nodes
-    def bubble(self,state):
+    #function also determines if sergei_jr is player1 or player2
+    def bubble(state):
+        ply = state.next_player()#determines the ply of the current state +1 if player1 goes -1 if Player2 goes
+        
 
         return 0
 
 
     def minimax(self, state):
-        stack = []
-        visited = {}
+        
+        if(state.is_full() == True):
+            print("FULL_BOARD",state.utility())
+            return state.utility()
+        else:
+            utl_check= self.bubble(state)
+            return utl_check
+
+        
        
 
         
-        return state.utility()
+        
 
 
 class MinimaxHeuristicAgent(MinimaxAgent):
