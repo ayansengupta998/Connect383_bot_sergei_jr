@@ -55,12 +55,13 @@ class MinimaxAgent:
         utility = popped[0].utility()
         print("Utility", utility)
         minimax = popped[1]
+        print(minimax,"mini")
         current_child = popped[0]
         # print("current_child", current_child, type(current_child))
         parents[current_child] = (parents[current_child][0],utility)
         # print("Testing Testing", type(parents[current_child][0]))
         current_parent= parents[popped[0]][0]
-        # print("Parent", current_parent[0], type(current_parent[0]))
+        # print("Parent", current_parent[0], type(current_parent[0])
         while(current_child != state):
             if minimax == 1:
                 #update parent with min of the values
@@ -97,7 +98,8 @@ class MinimaxAgent:
             popped = stack.pop(len(stack)-1)
             # print("Popped:", popped[0], type(popped[0]))
             visited[popped[0]] = ""
-            if popped[0].is_full():
+            if(popped[0].is_full()==True):
+                print(popped[0].is_full(),"TESTING")
                 utility = self.bubble_up(parents, popped, state)
             else:
                 successors = popped[0].successors()
