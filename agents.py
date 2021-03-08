@@ -2,7 +2,7 @@ import random
 import math
 
 
-BOT_NAME = "Sergei_jr" 
+BOT_NAME = "Sergie_jr"
 
 
 class RandomAgent:
@@ -46,34 +46,46 @@ class MinimaxAgent:
         best_state = None
 
         for move, state in state.successors():
+            # print(state.successors(),"boiiii")
             util = self.minimax(state)
             print(util)
             if ((nextp == 1) and (util > best_util)) or ((nextp == -1) and (util < best_util)):
                 best_util, best_move, best_state = util, move, state
         return best_move, best_state
+    
+    #function that bubbles up the value from the terminal nodes
+    #function also determines if sergei_jr is player1 or player2
+   
+
 
     def minimax(self, state):
-        """Determine the minimax utility value of the given state.
-
-        Args:
-            state: a connect383.GameState object representing the current board
-
-        Returns: the exact minimax utility value of the state
-        """
-        stack = [()]
-        visited = {}
-        stack.append((state,1))
-        while len(stack) == 0:
-            pop = stack.pop(len(stack)-1)
-            if pop[0].is_full:
-                return pop[0].utility
-            else:
-                visited.append(pop[0])
-                temp = pop[0].successors()
-                for i in temp:
-                    stack.append((i,-1 * pop[1])
+        ply = state.next_player()#gives us what player goes next 
+       #if terminal node return util val right away 
+        if(state.is_full()==True):
+            return state.utility()
+        if (ply == 1):
+            bestval = -math.inf 
+            for move, state_cur in state.successors():
+                bubble = self.minimax(state_cur)
+                bestval = max(bestval,bubble)
+        else:
+            bestval = math.inf
+            for move, state_cur in state.successors():
+                bubble = self.minimax(state_cur)
+                bestval = min(bestval,bubble)
+        return bestval
+           
             
-        return 42  # Change this line!
+                    
+                
+        
+        
+        
+        
+       
+
+        
+        
 
 
 class MinimaxHeuristicAgent(MinimaxAgent):
