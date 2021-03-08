@@ -53,22 +53,32 @@ class MinimaxAgent:
     
     #function that bubbles up the value from the terminal nodes
     #function also determines if sergei_jr is player1 or player2
-    def bubble(state):
-        ply = state.next_player()#determines the ply of the current state +1 if player1 goes -1 if Player2 goes
-        
-
-        return 0
+   
 
 
     def minimax(self, state):
-        
-        if(state.is_full() == True):
-            print("FULL_BOARD",state.utility())
+        ply = state.next_player()#gives us what player goes next 
+       #if terminal node return util val right away 
+        if(state.is_full()==True):
             return state.utility()
+        if (ply == 1):
+            bestval = -math.inf 
+            for move, state_cur in state.successors():
+                bubble = self.minimax(state_cur)
+                bestval = max(bestval,bubble)
         else:
-            utl_check= self.bubble(state)
-            return utl_check
-
+            bestval = math.inf
+            for move, state_cur in state.successors():
+                bubble = self.minimax(state_cur)
+                bestval = min(bestval,bubble)
+        return bestval
+           
+            
+                    
+                
+        
+        
+        
         
        
 
