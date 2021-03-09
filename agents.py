@@ -38,7 +38,6 @@ class MinimaxAgent:
     """Artificially intelligent agent that uses minimax to optimally select the best move."""
 
     def get_move(self, state):
-        print("I made it")
         """Select the best available move, based on minimax value."""
         nextp = state.next_player()
         best_util = -math.inf if nextp == 1 else math.inf
@@ -48,7 +47,6 @@ class MinimaxAgent:
         for move, state in state.successors():
             # print(state.successors(),"boiiii")
             util = self.minimax(state)
-            print(util)
             if ((nextp == 1) and (util > best_util)) or ((nextp == -1) and (util < best_util)):
                 best_util, best_move, best_state = util, move, state
         return best_move, best_state
@@ -65,9 +63,9 @@ class MinimaxAgent:
             return state.utility()
         if (ply == 1):
             bestval = -math.inf 
-            for move, state_cur in state.successors():
-                bubble = self.minimax(state_cur)
-                bestval = max(bestval,bubble)
+            for move, state_cur in state.successors(): #generates all legal successors 
+                bubble = self.minimax(state_cur) #recursive call to get utility of the state
+                bestval = max(bestval,bubble)#compare best value found so far and update if new util val is better
         else:
             bestval = math.inf
             for move, state_cur in state.successors():
@@ -75,19 +73,6 @@ class MinimaxAgent:
                 bestval = min(bestval,bubble)
         return bestval
            
-            
-                    
-                
-        
-        
-        
-        
-       
-
-        
-        
-
-
 class MinimaxHeuristicAgent(MinimaxAgent):
     """Artificially intelligent agent that uses depth-limited minimax to select the best move."""
 
@@ -107,10 +92,30 @@ class MinimaxHeuristicAgent(MinimaxAgent):
 
         Returns: the minimax utility value of the state
         """
-        #
-        # Fill this in!
-        #
-        return 9  # Change this line!
+        if state.is_full():
+            return self.evaluation(state)
+
+        if self.depth_limit == 0:
+            return self.evaluation(state)
+        
+        bestVal = None
+        if state.next_player() == 1:
+            bestVal = -(math.inf)
+            for move, state in state.successors():
+                if self.depth_limit == None:
+                    value = self.minimax(state)
+                else:
+                    value = self.minimax(state)
+                bestVal = max(bestVal, value)
+        else:
+            bestVal = math.inf
+            for move, state in state.successors():
+                if self.depth_limit == None:
+                    value = self.minimax(state)
+                else:
+                    value = self.minimax(state)
+                bestVal = min(bestVal, value)
+        return bestVal 
 
     def evaluation(self, state):
         """Estimate the utility value of the game state based on features.
@@ -122,14 +127,42 @@ class MinimaxHeuristicAgent(MinimaxAgent):
 
         Returns: a heusristic estimate of the utility value of the state
         """
-        #
-        # Fill this in!
-        #
-        return state.utility() # Change this line!
+        flag = 0 #initialzing a flag to keep track of score
+        for x in state.get_rows()+state.get_cols()+state.get_diags(): #get all the rows,cols and diagonals and iterate over them
+            flag = flag + self.true_eval(x)
+        return flag
+    def true_eval(self,run): #function that calculates the evaluation function
+        """Instead of adding score when the streak length is 3 or more we look at any instance where 2 similar symbol (X or 0)"""
+        rets = []  
+        prev = run[0]
+        curr_len = 1
+        p1_score = 0
+        p2_score = 0
+        for curr in run[1:]:
+            if curr == prev:
+                curr_len += 1
+            else:
+                if curr_len > 2:
+                    rets.append((prev, curr_len))
+                    if prev == 1:
+                        p1_score += curr_len**2
+                    elif prev == -1:
+                        p2_score += curr_len**2
+                prev = curr
+                curr_len = 1
+        if curr_len > 2:
+            rets.append((prev, curr_len))
+            if prev == 1:
+                p1_score += curr_len**2
+            elif prev == -1:
+                p2_score += curr_len**2
+        return p1_score - p2_score
 
+     
 
 class MinimaxHeuristicPruneAgent(MinimaxHeuristicAgent):
     """Smarter computer agent that uses minimax with alpha-beta pruning to select the best move."""
+    
 
     def minimax(self, state):
         """Determine the minimax utility value the given state using alpha-beta pruning.
