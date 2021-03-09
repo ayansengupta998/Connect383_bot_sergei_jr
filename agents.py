@@ -164,27 +164,27 @@ class MinimaxHeuristicPruneAgent(MinimaxHeuristicAgent):
     """Smarter computer agent that uses minimax with alpha-beta pruning to select the best move."""
     
 
-    def minimax(self, state):
-        """Determine the minimax utility value the given state using alpha-beta pruning.
-
-        The value should be equal to the one determined by MinimaxAgent.minimax(), but the 
-        algorithm should do less work.  You can check this by inspecting the value of the class 
-        variable GameState.state_count, which keeps track of how many GameState objects have been 
-        created over time.  This agent should also respect the depth limit like HeuristicAgent.
-
-        N.B.: When exploring the game tree and expanding nodes, you must consider the child nodes
-        in the order that they are returned by GameState.successors().  That is, you cannot prune
-        the state reached by moving to column 4 before you've explored the state reached by a move
-        to to column 1.
-
-        Args: 
-            state: a connect383.GameState object representing the current board
-
-        Returns: the minimax utility value of the state
-        """
-        #
-        # Fill this in!
-        #
-        return 13  # Change this line!
+    def minimax(self, state, depth, alpha, beta):
+        ply = state.next_player()#gives us what player goes next 
+       #if terminal node return util val right away 
+        if(state.is_full()==True or depth == 0):
+            return state.utility()
+        if (ply == 1):
+            bestval = -math.inf 
+            for move, state_cur in state.successors(): #generates all legal successors 
+                bubble = self.minimax(state_cur, depth-1, alpha, beta) #recursive call to get utility of the state
+                bestval = max(bestval,bubble)#compare best value found so far and update if new util val is better
+                alpha = max(alpha, bestval)
+                if beta <= alpha:
+                    break
+        else:
+            bestval = math.inf
+            for move, state_cur in state.successors():
+                bubble = self.minimax(state_cur, depth-1, alpha, beta)
+                bestval = min(bestval,bubble)
+                beta = min(beta, bestval)
+                if beta <=alpha:
+                    break
+        return bestval
 
 
