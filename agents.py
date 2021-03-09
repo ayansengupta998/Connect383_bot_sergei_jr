@@ -162,9 +162,11 @@ class MinimaxHeuristicAgent(MinimaxAgent):
 
 class MinimaxHeuristicPruneAgent(MinimaxHeuristicAgent):
     """Smarter computer agent that uses minimax with alpha-beta pruning to select the best move."""
-    
 
-    def minimax(self, state, depth, alpha, beta):
+    def minimax(self, state):
+        return self.minimaxRecurser(state, -math.inf, math.inf, self.depth_limit)
+
+    def minimaxRecurser(self, state, alpha, beta, depth):
         ply = state.next_player()#gives us what player goes next 
        #if terminal node return util val right away 
         if(state.is_full()==True or depth == 0):
@@ -172,7 +174,7 @@ class MinimaxHeuristicPruneAgent(MinimaxHeuristicAgent):
         if (ply == 1):
             bestval = -math.inf 
             for move, state_cur in state.successors(): #generates all legal successors 
-                bubble = self.minimax(state_cur, depth-1, alpha, beta) #recursive call to get utility of the state
+                bubble = self.minimaxRecurser(state_cur, alpha, beta, depth-1) #recursive call to get utility of the state
                 bestval = max(bestval,bubble)#compare best value found so far and update if new util val is better
                 alpha = max(alpha, bestval)
                 if beta <= alpha:
@@ -180,7 +182,7 @@ class MinimaxHeuristicPruneAgent(MinimaxHeuristicAgent):
         else:
             bestval = math.inf
             for move, state_cur in state.successors():
-                bubble = self.minimax(state_cur, depth-1, alpha, beta)
+                bubble = self.minimaxRecurser(state_cur, alpha, beta, depth-1)
                 bestval = min(bestval,bubble)
                 beta = min(beta, bestval)
                 if beta <=alpha:
